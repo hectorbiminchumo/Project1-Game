@@ -4,12 +4,15 @@ const $canvas = document.querySelector("canvas");
 const ctx= $canvas.getContext("2d");
 
 //Variables globales
+let intervalId;
 let frames = 0;
 const keys={};
 const bullets = [];
 const enemyShip=[];
 const enemyShip2 = [];
 const enemyShip3 = [];
+let score=0;
+let isGameOver=false;
 
 //Definir las clases del juego
 class Board {
@@ -24,7 +27,7 @@ class Board {
 
     draw(){
 
-        this.y+=2;
+        this.y++;
 
     if(this.y>this.height)this.y =0;
     ctx.drawImage(this.image,this.x, this.y, this.width, this.height);
@@ -34,7 +37,12 @@ class Board {
         this.y - this.height,
         this.width,
         this.height
+        
     );
+    ctx.font = "30px sans-serif";
+        ctx.fillText(`Score : ${score}`,480,38);
+        // ctx.fillText(`Life: ${health}`,410.58);
+        ctx.fillStyle = "White"
     }
 }
 
@@ -49,7 +57,7 @@ class Character{
         this.height= 80;
         this.image = new Image();
         this.move = 60;
-        this.image.src = "./images/spaceship-2.png"
+        this.image.src = "./images/spaceship-2-cut.png"
         this.health = 3;
         
     }
@@ -73,7 +81,8 @@ class Character{
         
         
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        
+        ctx.font = "30px sans-serif";
+        ctx.fillText(`Health : ${this.health}`,480,68);
     }
     
     moveLeft(){
@@ -90,10 +99,10 @@ class Character{
     }
     isTouching(obj){
         return (   
-        this.x < obj.x + obj.width-20 &&
-        this.x + this.width-20 > obj.x &&
-        this.y < obj.y + obj.height-20 &&
-        this.y + this.height-20 > obj.y
+        this.x < obj.x + obj.width-10 &&
+        this.x + this.width-10 > obj.x &&
+        this.y < obj.y + obj.height-10 &&
+        this.y + this.height-10 > obj.y
       );
     }
 }
@@ -114,10 +123,10 @@ class Bullet {
         }
         isTouchingBullet(obj){
             return (   
-                this.x < obj.x + obj.width-20 &&
-                this.x + this.width-20 > obj.x &&
-                this.y < obj.y + obj.height-20 &&
-                this.y + this.height-20 > obj.y
+                this.x < obj.x + obj.width &&
+                this.x + this.width > obj.x &&
+                this.y < obj.y + obj.height &&
+                this.y + this.height > obj.y
               );
         }
         
@@ -126,11 +135,13 @@ class Bullet {
 class Enemies extends Character{
 constructor(x,y) {
     super(x,y);
-    this.image.src="./images/enemy.png"
+    this.image.src="./images/enemy-cut.png"
 }
 draw(){
     this.y+=2;
     this.x-=1;
+    this.width= 50;
+    this.height=50;
     if(this.x > $canvas.width - this.width - 60)
     this.x = $canvas.width - this.width - 60;
     // if(this.x<60)
@@ -144,9 +155,9 @@ draw(){
 class Enemies2 extends Character{
     constructor(x,y){
         super(x,y);
-        this.image.src = "./images/spaceship-red.png"
-        this.height= 70;
-        this.width= 100;
+        this.image.src = "./images/spaceship-red-cut.png"
+        this.height= 40;
+        this.width= 60;
     }
 
     draw(){
@@ -163,7 +174,7 @@ class Enemies2 extends Character{
 class Enemies3 extends Character {
     constructor(x,y){
         super(x,y);
-        this.image.src = "./images/spaceship-transparent.png";
+        this.image.src = "./images/spaceship-transparent-cut.png";
         this.height= 70;
         this.width= 100;
     }
@@ -186,7 +197,16 @@ const nave = new Character(235,550)
 // Funciones del flujo del juego
 
 function startGame(){
-    update();
+    if(intervalId) return;
+    intervalId = setInterval(()=>{
+        update();
+    }, 1000);
+}
+function gameOver(){
+    if(isGameOver){
+        ctx.font= "40px sans-serif";
+        ctx.fillText("Game Over",$canvas.width/3, $canvas.height/2);
+    }
 }
 
 function clearCanvas(){
@@ -224,7 +244,7 @@ function checkKeys(){
 }
 
 function generateEnemies(){
-    if(frames%40 === 0 ){
+    if(frames%150 === 0 ){
         const x = Math.floor(Math.random()*380);
         const enemy = new Enemies(x,0);
         enemyShip.push(enemy);
@@ -237,7 +257,7 @@ function drawEnemies(){
 }
 
 function generateEnemies2(){
-    if(frames%40 === 0){
+    if(frames%200 === 0){
         const x = Math.floor(Math.random()*380);
         const enemy2 = new Enemies2(x,0);
         enemyShip2.push(enemy2);
@@ -249,7 +269,7 @@ function drawEnemies2(){
 }
 
 function generateEnemies3(){
-    if(frames%150 === 0){
+    if(frames%250 === 0){
         const x = Math.floor(Math.random()*380);
         const enemy3 = new Enemies3(x,0);
         enemyShip3.push(enemy3);
@@ -264,15 +284,17 @@ function drawEnemies3(){
 function printBullets(){
     bullets.forEach((bullet) => bullet.draw());
 }
-function gameOver(){
 
-
-}
 function checkBulletsEnemies(){
     enemyShip.forEach((randomsEnemy)=>{
         bullets.forEach((randomBullet)=>{
             if(randomBullet.isTouchingBullet(randomsEnemy)){
                 enemyShip.splice(randomsEnemy,1);
+                bullets.splice(randomBullet,1);
+                if(!isGameOver) {
+                    
+                    score++;}
+
                 
             }
 
@@ -286,6 +308,11 @@ function checkBulletsEnemies2(){
         bullets.forEach((randomBullet)=>{
             if(randomBullet.isTouchingBullet(randomsEnemy)){
                 enemyShip2.splice(randomsEnemy,1);
+                bullets.splice(randomBullet,1);
+                if(!isGameOver) {
+                    
+                    score++;}
+
                 
             }
 
@@ -299,6 +326,11 @@ function checkBulletsEnemies3(){
         bullets.forEach((randomBullet)=>{
             if(randomBullet.isTouchingBullet(randomsEnemy)){
                 enemyShip3.splice(randomsEnemy,1);
+                bullets.splice(randomBullet,1);
+               if(!isGameOver) {
+                    
+                        score++;}
+                
                 
             }
 
@@ -317,7 +349,8 @@ function checkCollitions(){
                 nave.health--;
                 enemyShip.splice(randomEnemy,1);
             }else {
-                alert("Game Over");
+                clearInterval(intervalId);
+                isGameOver= true;
                 
             }
         }
@@ -328,7 +361,9 @@ function checkCollitions(){
                 nave.health--;
                 enemyShip2.splice(randomEnemy,1);
             }else{
-                alert("Game Over")
+                
+                clearInterval(intervalId);
+                isGameOver= true;
             }
         }
     })   
@@ -338,7 +373,9 @@ function checkCollitions(){
                 nave.health--;
                 enemyShip3.splice(randomEnemy,1);
             } else{
-                alert("Game Over")
+                
+                clearInterval(intervalId);
+                isGameOver= true;
             }
         }
     })
@@ -373,6 +410,7 @@ function update(){
     drawEnemies2();
     generateEnemies3();
     drawEnemies3();
+    gameOver();
 
     requestAnimationFrame(update);
 }
@@ -380,4 +418,13 @@ function update(){
 //Funciones de interaccion con el usuario
 
 
-startGame();
+// startGame();
+document.onkeydown = (event)=>{
+    switch (event.key) {
+        case "Enter":
+            startGame();
+                break;
+            default:
+                break;
+    }
+}
