@@ -39,8 +39,8 @@ class Board {
         this.height
         
     );
-    ctx.font = "30px sans-serif";
-        ctx.fillText(`Score : ${score}`,480,38);
+    ctx.font = "15px sans-serif";
+        ctx.fillText(`Score : ${score}`,400,38);
         // ctx.fillText(`Life: ${health}`,410.58);
         ctx.fillStyle = "White"
     }
@@ -53,10 +53,10 @@ class Character{
     constructor (x,y){
         this.x= x;
         this.y= y;
-        this.width = 80;
-        this.height= 80;
+        this.width = 40;
+        this.height= 40;
         this.image = new Image();
-        this.move = 60;
+        this.move = 40;
         this.image.src = "./images/spaceship-2-cut.png"
         this.health = 3;
         
@@ -81,8 +81,8 @@ class Character{
         
         
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        ctx.font = "30px sans-serif";
-        ctx.fillText(`Health : ${this.health}`,480,68);
+        ctx.font = "15px sans-serif";
+        ctx.fillText(`Health : ${this.health}`,400,68);
     }
     
     moveLeft(){
@@ -114,12 +114,19 @@ class Bullet {
             this.width = 2;
             this.height = 8;
             this.color = "white";
+            this.audio = new Audio();
+            this.audio.src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-69838/cartoon_anime_laser_shoot_hard_fast_001_71523.mp3"
 
         }
         draw(){
             this.y--;
             ctx.fillStyle= this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+
+        shootSound(){
+            this.audio.volume = 0.2;
+            this.audio.play();
         }
         isTouchingBullet(obj){
             return (   
@@ -140,8 +147,8 @@ constructor(x,y) {
 draw(){
     this.y+=2;
     this.x-=1;
-    this.width= 50;
-    this.height=50;
+    this.width= 25;
+    this.height=25;
     if(this.x > $canvas.width - this.width - 60)
     this.x = $canvas.width - this.width - 60;
     // if(this.x<60)
@@ -156,8 +163,8 @@ class Enemies2 extends Character{
     constructor(x,y){
         super(x,y);
         this.image.src = "./images/spaceship-red-cut.png"
-        this.height= 40;
-        this.width= 60;
+        this.height= 20;
+        this.width= 30;
     }
 
     draw(){
@@ -175,8 +182,8 @@ class Enemies3 extends Character {
     constructor(x,y){
         super(x,y);
         this.image.src = "./images/spaceship-transparent-cut.png";
-        this.height= 70;
-        this.width= 100;
+        this.height= 35;
+        this.width= 50;
     }
 
     draw(){
@@ -229,8 +236,9 @@ function checkKeys(){
             case "ArrowDown":
                 nave.moveDown();
                 break;
-            case " ":
+            case "a":
                 const bullet = new Bullet(nave.x+40, nave.y);
+                bullet.shootSound();
                 bullets.push(bullet);
             // case "Enter":
             //     startGame();    
@@ -411,7 +419,7 @@ function update(){
     generateEnemies3();
     drawEnemies3();
     gameOver();
-
+    
     requestAnimationFrame(update);
 }
 

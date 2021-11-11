@@ -1,0 +1,19 @@
+.game-boy{
+width: 1200px;
+height: 760px;
+background-image: url("https://cdn-icons-png.flaticon.com/512/2094/2094405.png") ;
+background-repeat: none;
+background-size: cover;
+
+padding:0%;
+margin-left: -250px;;
+}
+
+canvas{
+    position:absolute;
+    left: 115px;
+    top: 178px;
+    border-radius: 0px 0px 50px 0px;
+
+
+}
