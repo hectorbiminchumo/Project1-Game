@@ -6,14 +6,19 @@ background-repeat: none;
 background-size: cover;
 
 padding:0%;
-margin-left: -250px;;
+margin-left: 100px;;
 }
 
 canvas{
     position:absolute;
-    left: 115px;
+    left: 465px;
     top: 178px;
     border-radius: 0px 0px 50px 0px;
 
 
+}
+
+button{
+    width: 200px;
+    height: 100px;
 }

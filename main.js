@@ -2,6 +2,7 @@
 //Elementos del DOM (canvas)
 const $canvas = document.querySelector("canvas");
 const ctx= $canvas.getContext("2d");
+const $button= document.querySelector("button")
 
 //Variables globales
 let intervalId;
@@ -13,6 +14,7 @@ const enemyShip2 = [];
 const enemyShip3 = [];
 let score=0;
 let isGameOver=false;
+let health=5
 
 //Definir las clases del juego
 class Board {
@@ -23,6 +25,8 @@ class Board {
         this.height = $canvas.height;
         this.image = new Image();
         this.image.src = "http://3.bp.blogspot.com/-89wTEhm2SAs/UeKl0-0WCZI/AAAAAAAAOPY/dLmDPksGh-A/s280/sprite_effects_fire_sprite_fx_0129.png";
+        this.background = new Image();
+        this.background.src = "./images/inner-spaceship.jpeg"
     }
 
     draw(){
@@ -39,13 +43,25 @@ class Board {
         this.height
         
     );
+    if(score===10){
+            this.image= new Image();
+            this.image.src= "./images/pantalla-removebg-preview.png"
+            ctx.drawImage(this.image,0,0,$canvas.width,$canvas.height);
+            this.y=0;
+
+    }
+
+    //Score del juego
     ctx.font = "15px sans-serif";
         ctx.fillText(`Score : ${score}`,400,38);
         // ctx.fillText(`Life: ${health}`,410.58);
         ctx.fillStyle = "White"
     }
-}
 
+  
+
+
+}
 
 
 
@@ -58,7 +74,7 @@ class Character{
         this.image = new Image();
         this.move = 40;
         this.image.src = "./images/spaceship-2-cut.png"
-        this.health = 3;
+        this.health = health;
         
     }
     
@@ -84,6 +100,10 @@ class Character{
         ctx.font = "15px sans-serif";
         ctx.fillText(`Health : ${this.health}`,400,68);
     }
+    stop(){
+        if(gameOver=true) this.move=0;
+    }
+
     
     moveLeft(){
         this.x -= this.move;
@@ -105,6 +125,8 @@ class Character{
         this.y + this.height-10 > obj.y
       );
     }
+   
+
 }
 
 class Bullet {
@@ -207,21 +229,21 @@ function startGame(){
     if(intervalId) return;
     intervalId = setInterval(()=>{
         update();
-    }, 1000);
+    }, 1000/60);
 }
 function gameOver(){
     if(isGameOver){
         ctx.font= "40px sans-serif";
-        ctx.fillText("Game Over",$canvas.width/3, $canvas.height/2);
+        ctx.fillText("Game Over",$canvas.width/4, $canvas.height/2);
+        
     }
 }
 
-function clearCanvas(){
-    ctx.clearRect(0, 0, $canvas.width, $canvas.height)
-}
+
 
 function checkKeys(){
     document.onkeydown = (event)=>{
+        event.preventDefault();
         switch(event.key){
 
             case "ArrowLeft":
@@ -236,7 +258,7 @@ function checkKeys(){
             case "ArrowDown":
                 nave.moveDown();
                 break;
-            case "a":
+            case " ":
                 const bullet = new Bullet(nave.x+40, nave.y);
                 bullet.shootSound();
                 bullets.push(bullet);
@@ -299,9 +321,11 @@ function checkBulletsEnemies(){
             if(randomBullet.isTouchingBullet(randomsEnemy)){
                 enemyShip.splice(randomsEnemy,1);
                 bullets.splice(randomBullet,1);
+                
                 if(!isGameOver) {
                     
-                    score++;}
+                    score++}
+                    
 
                 
             }
@@ -388,12 +412,7 @@ function checkCollitions(){
         }
     })
         
-    // bullets.forEach((randomEnemy)=>{
-    //     if(bullet.isTouching(randomEnemy)){
 
-    //     }
-
-    // })
 
 }
 
@@ -420,19 +439,32 @@ function update(){
     drawEnemies3();
     gameOver();
     
-    requestAnimationFrame(update);
+    
+    
+    // requestAnimationFrame(update);
 }
+
 
 //Funciones de interaccion con el usuario
-
+function clearCanvas(){
+    ctx.clearRect(0, 0, $canvas.width, $canvas.height)
+}
 
 // startGame();
-document.onkeydown = (event)=>{
-    switch (event.key) {
-        case "Enter":
-            startGame();
-                break;
-            default:
-                break;
-    }
-}
+// document.onkeydown = (event)=>{
+//     switch (event.key) {
+//         case "Enter":
+//             startGame();
+//                 break;
+//             default:
+//                 break;
+//     }
+// }
+
+$button.addEventListener("click",event=> {
+    startGame();
+    const sound= new Audio();
+    sound.src="./images/music.mp3";
+    // sound.play();
+    sound.volume= 0.2;
+});
