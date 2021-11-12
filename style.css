@@ -1,3 +1,7 @@
+
+*{
+    font-family: overpass;
+}
 .game-boy{
 width: 1200px;
 height: 1200px;
@@ -6,25 +10,71 @@ background-repeat: none;
 background-size: cover;
 
 padding:0%;
-margin-left: 100px;;
+margin-left: 200px;;
+}
+
+body{
+    margin:0;
 }
 
 canvas{
     position:absolute;
-    left: 465px;
+    left: 565px;
     top: 178px;
     border-radius: 0px 0px 50px 0px;
-    background-image: url("./images/pantalla-removebg-preview.png");
+    background-image: url("./images/startrek.webp");
+    background-size: cover;
+    background-position: 40% 90%;
     
 
 }
 
+
+
 button{
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     position: relative;
-    left: 860px;
-    top: -520px;
+    left: 750px;
+    top: -1120px;
     border-radius: 50% 60%;
-    border-width: 20px;
+    border-width: 30px;
+    background-color: red;
+    font-weight: 500;
+    
+}
+.game{
+    background-image: url(./images/space-back.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 90% 90%;
+    margin:0;
+    padding: 0;
+    
+}
+
+.text-game{
+    width: 350px;
+    height: 500px;
+    /* background-image: url("./images/frame.png");
+    background-repeat: no-repeat; */
+    position: relative;;
+    top: -1000px;
+    left: 50px;
+    line-height: 1.7rem;
+    color:white;
+}
+
+.text-game p{
+    
+    padding-left: 20px;
+    padding-top: 0;
+    margin-top: 0;   
+    
+
+}
+h1{
+    padding-top:30px;
+    padding-left: 30px; 
+    font-size: 40px;
 }

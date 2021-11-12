@@ -12,6 +12,7 @@ const bullets = [];
 const enemyShip=[];
 const enemyShip2 = [];
 const enemyShip3 = [];
+let scoreMax=20;
 let score=0;
 let isGameOver=false;
 let isGameWin= false;
@@ -27,10 +28,10 @@ class Board {
         this.height = $canvas.height;
         this.image = new Image();
         this.image.src = "http://3.bp.blogspot.com/-89wTEhm2SAs/UeKl0-0WCZI/AAAAAAAAOPY/dLmDPksGh-A/s280/sprite_effects_fire_sprite_fx_0129.png";
-        this.background = new Image();
-        this.background.src = "./images/inner-spaceship.jpeg"
+        // this.background = new Image();
+        // this.background.src = "./images/inner-spaceship.jpeg"
         this.win = new Image();
-        this.win.src = "./images/win.png"
+        this.win.src = "https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/701c4c50c3eb020.png"
         
     }
 
@@ -48,7 +49,7 @@ class Board {
         this.height
         
     );
-    if(score===5){
+    if(score===scoreMax){
             
             ctx.drawImage(this.win,0,0,$canvas.width,$canvas.height);
             
@@ -57,7 +58,7 @@ class Board {
 
     //Score del juego
     ctx.font = "15px sans-serif";
-        ctx.fillText(`Score : ${score}`,400,38);
+        ctx.fillText(`Score : ${score}`,400,30);
         // ctx.fillText(`Life: ${health}`,410.58);
         ctx.fillStyle = "White"
     }
@@ -102,7 +103,7 @@ class Character{
         
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.font = "15px sans-serif";
-        ctx.fillText(`Health : ${this.health}`,400,68);
+        ctx.fillText(`Health : ${this.health}`,400,60);
     }
     stop(){
         if(gameOver=true) this.move=0;
@@ -193,7 +194,7 @@ class Enemies2 extends Character{
     }
 
     draw(){
-        this.y+=2;
+        this.y+=3;
         this.x+=1;
         
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -212,7 +213,7 @@ class Enemies3 extends Character {
     }
 
     draw(){
-        this.y+=2;
+        this.y+=4;
         this.x;
 
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -233,7 +234,7 @@ function startGame(){
     if(intervalId) return;
     intervalId = setInterval(()=>{
         update();
-    }, 1000/100);
+    }, 1000/60);
 }
 function gameOver(){
     if(isGameOver){
@@ -249,6 +250,7 @@ function gameOver(){
 function gameWin(){
     isGameWin===true;
     clearInterval(intervalId);
+    
 
 }
 
@@ -288,7 +290,7 @@ function checkKeys(){
 }
 
 function generateEnemies(){
-    if(frames%150 === 0 ){
+    if(frames%100 === 0 ){
         const x = Math.floor(Math.random()*380);
         const enemy = new Enemies(x,0);
         enemyShip.push(enemy);
@@ -297,7 +299,7 @@ function generateEnemies(){
 }
 
 function drawEnemies(){
-    if(score===5) {return}
+    if(score===scoreMax) {return}
     else{ 
         enemyShip.forEach((enemy)=> enemy.draw());
         
@@ -305,7 +307,7 @@ function drawEnemies(){
 }
 
 function generateEnemies2(){
-    if(frames%200 === 0){
+    if(frames%150 === 0){
         const x = Math.floor(Math.random()*380);
         const enemy2 = new Enemies2(x,0);
         enemyShip2.push(enemy2);
@@ -314,7 +316,7 @@ function generateEnemies2(){
 
 function drawEnemies2(){
     
-    if(score===5) {return}
+    if(score===scoreMax) {return}
     else{
         
         enemyShip2.forEach((enemy2)=> enemy2.draw());
@@ -323,7 +325,7 @@ function drawEnemies2(){
 }
 
 function generateEnemies3(){
-    if(frames%250 === 0){
+    if(frames%200 === 0){
         const x = Math.floor(Math.random()*380);
         const enemy3 = new Enemies3(x,0);
         enemyShip3.push(enemy3);
@@ -331,7 +333,7 @@ function generateEnemies3(){
 }
 
 function drawEnemies3(){
-    if(score===5) {return}
+    if(score===scoreMax) {return}
     else{
 
         enemyShip3.forEach((enemy3)=> enemy3.draw());
@@ -409,7 +411,7 @@ function checkCollitions(){
             if(nave.health > 0){
                 nave.health -= 1;
                 enemyShip.splice(randomEnemy,1);
-            }else if (score===5){
+            }else if (score===scoreMax){
                 gameWin();
                 clearInterval(intervalId);
 
@@ -443,7 +445,7 @@ function checkCollitions(){
             if(nave.health>0){
                 nave.health -= 1;
                 enemyShip3.splice(randomEnemy,1);
-            } else if (score===5){
+            } else if (score===scoreMax){
                 gameWin();
                 clearInterval(intervalId);
             }else if(nave.health===0){ 
@@ -496,7 +498,7 @@ function gameOverCheck(){
 }
 function gameWinCheck(){
     board.draw();
-    if(score===5){gameWin();
+    if(score===scoreMax){gameWin();
      }
     else{ nave.draw();}
 
@@ -509,16 +511,7 @@ function clearCanvas(){
     ctx.clearRect(0, 0, $canvas.width, $canvas.height)
 }
 
-// startGame();
-// document.onkeydown = (event)=>{
-//     switch (event.key) {
-//         case "Enter":
-//             startGame();
-//                 break;
-//             default:
-//                 break;
-//     }
-// }
+
 
 $button.addEventListener("click",event=> {
     
