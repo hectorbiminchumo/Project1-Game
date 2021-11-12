@@ -14,7 +14,9 @@ const enemyShip2 = [];
 const enemyShip3 = [];
 let score=0;
 let isGameOver=false;
-let health=5
+let isGameWin= false;
+let health=5;
+
 
 //Definir las clases del juego
 class Board {
@@ -27,6 +29,9 @@ class Board {
         this.image.src = "http://3.bp.blogspot.com/-89wTEhm2SAs/UeKl0-0WCZI/AAAAAAAAOPY/dLmDPksGh-A/s280/sprite_effects_fire_sprite_fx_0129.png";
         this.background = new Image();
         this.background.src = "./images/inner-spaceship.jpeg"
+        this.win = new Image();
+        this.win.src = "./images/win.png"
+        
     }
 
     draw(){
@@ -43,11 +48,10 @@ class Board {
         this.height
         
     );
-    if(score===10){
-            this.image= new Image();
-            this.image.src= "./images/pantalla-removebg-preview.png"
-            ctx.drawImage(this.image,0,0,$canvas.width,$canvas.height);
-            this.y=0;
+    if(score===5){
+            
+            ctx.drawImage(this.win,0,0,$canvas.width,$canvas.height);
+            
 
     }
 
@@ -173,8 +177,7 @@ draw(){
     this.height=25;
     if(this.x > $canvas.width - this.width - 60)
     this.x = $canvas.width - this.width - 60;
-    // if(this.x<60)
-    // this.x = 60;
+   
 
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 }
@@ -223,21 +226,32 @@ const board = new Board();
 const nave = new Character(235,550)
 
 
+
 // Funciones del flujo del juego
 
 function startGame(){
     if(intervalId) return;
     intervalId = setInterval(()=>{
         update();
-    }, 1000/60);
+    }, 1000/100);
 }
 function gameOver(){
     if(isGameOver){
         ctx.font= "40px sans-serif";
         ctx.fillText("Game Over",$canvas.width/4, $canvas.height/2);
+
         
+    }else if(isGameWin===true){
+        gameWin();
     }
 }
+
+function gameWin(){
+    isGameWin===true;
+    clearInterval(intervalId);
+
+}
+
 
 
 
@@ -283,7 +297,11 @@ function generateEnemies(){
 }
 
 function drawEnemies(){
-    enemyShip.forEach((enemy)=> enemy.draw());
+    if(score===5) {return}
+    else{ 
+        enemyShip.forEach((enemy)=> enemy.draw());
+        
+    }
 }
 
 function generateEnemies2(){
@@ -295,7 +313,13 @@ function generateEnemies2(){
 }
 
 function drawEnemies2(){
-    enemyShip2.forEach((enemy2)=> enemy2.draw());
+    
+    if(score===5) {return}
+    else{
+        
+        enemyShip2.forEach((enemy2)=> enemy2.draw());
+        
+    }
 }
 
 function generateEnemies3(){
@@ -307,7 +331,12 @@ function generateEnemies3(){
 }
 
 function drawEnemies3(){
-    enemyShip3.forEach((enemy3)=> enemy3.draw());
+    if(score===5) {return}
+    else{
+
+        enemyShip3.forEach((enemy3)=> enemy3.draw());
+
+    }
 }
 
 
@@ -378,9 +407,13 @@ function checkCollitions(){
     enemyShip.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                nave.health--;
+                nave.health -= 1;
                 enemyShip.splice(randomEnemy,1);
-            }else {
+            }else if (score===5){
+                gameWin();
+                clearInterval(intervalId);
+
+            }else if(nave.health===0){
                 clearInterval(intervalId);
                 isGameOver= true;
                 
@@ -390,9 +423,15 @@ function checkCollitions(){
     enemyShip2.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                nave.health--;
+                nave.health -= 1;
                 enemyShip2.splice(randomEnemy,1);
-            }else{
+
+            }else if (score===5){
+                gameWin();
+                clearInterval(intervalId);
+            }
+            
+            else if(nave.health===0){ 
                 
                 clearInterval(intervalId);
                 isGameOver= true;
@@ -402,9 +441,12 @@ function checkCollitions(){
     enemyShip3.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health>0){
-                nave.health--;
+                nave.health -= 1;
                 enemyShip3.splice(randomEnemy,1);
-            } else{
+            } else if (score===5){
+                gameWin();
+                clearInterval(intervalId);
+            }else if(nave.health===0){ 
                 
                 clearInterval(intervalId);
                 isGameOver= true;
@@ -421,15 +463,14 @@ function update(){
     //1. Calcular el estado
     frames++;
     checkKeys();
-    checkCollitions();
     checkBulletsEnemies();
     checkBulletsEnemies2();
     checkBulletsEnemies3();
+    checkCollitions();
     //2. Limpiar el canvas
     clearCanvas();
     //3. Dibujar
-    board.draw();
-    nave.draw();
+    gameWinCheck()
     printBullets();
     generateEnemies();
     drawEnemies();
@@ -437,12 +478,30 @@ function update(){
     drawEnemies2();
     generateEnemies3();
     drawEnemies3();
-    gameOver();
+    gameOverCheck();
+    
+    
     
     
     
     // requestAnimationFrame(update);
 }
+function gameOverCheck(){
+
+    if(isGameWin===true){
+        board.draw()
+
+    }else gameOver();
+
+}
+function gameWinCheck(){
+    board.draw();
+    if(score===5){gameWin();
+     }
+    else{ nave.draw();}
+
+}
+
 
 
 //Funciones de interaccion con el usuario
@@ -462,9 +521,9 @@ function clearCanvas(){
 // }
 
 $button.addEventListener("click",event=> {
+    
     startGame();
     const sound= new Audio();
     sound.src="./images/music.mp3";
-    // sound.play();
-    sound.volume= 0.2;
-});
+    sound.play();
+})

@@ -1,6 +1,6 @@
 .game-boy{
 width: 1200px;
-height: 760px;
+height: 1200px;
 background-image: url("https://cdn-icons-png.flaticon.com/512/2094/2094405.png") ;
 background-repeat: none;
 background-size: cover;
@@ -14,11 +14,17 @@ canvas{
     left: 465px;
     top: 178px;
     border-radius: 0px 0px 50px 0px;
-
+    background-image: url("./images/pantalla-removebg-preview.png");
+    
 
 }
 
 button{
-    width: 200px;
+    width: 100px;
     height: 100px;
+    position: relative;
+    left: 860px;
+    top: -520px;
+    border-radius: 50% 60%;
+    border-width: 20px;
 }
