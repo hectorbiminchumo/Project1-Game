@@ -13,13 +13,19 @@ const bullets = [];
 const enemyShip=[];
 const enemyShip2 = [];
 const enemyShip3 = [];
-let scoreMax=20;
+let scoreMax=100;
 let score=0;
 let isGameOver=false;
 let isGameWin= false;
 let health=100;
 const damage=1;
 let soundOn=0;
+const sound= new Audio();
+sound.src="./images/music.mp3";
+const soundWin= new Audio()
+soundWin.src="./images/Win.mp3";
+const soundOver= new Audio();
+soundOver.src="./images/GameOver.mp3"
 
 
 //Definir las clases del juego
@@ -111,6 +117,7 @@ class Character{
     }
     stop(){
         if(gameOver=true) this.move=0;
+       
     }
 
     
@@ -245,9 +252,10 @@ function startGame(){
 
     }, 1000/60);
     if(soundOn===0){
-    const sound= new Audio();
-        sound.src="./images/music.mp3";
+    
+       
         sound.play();
+        sound.volume=0.2;
         soundOn++;
     }
 
@@ -256,16 +264,21 @@ function gameOver(){
     if(isGameOver){
         ctx.font= "40px sans-serif";
         ctx.fillText("Game Over",$canvas.width/4, $canvas.height/2);
+        sound.pause();
+        soundOver.play();
 
         
     }else if(isGameWin===true){
         gameWin();
+        
     }
 }
 
 function gameWin(){
     isGameWin===true;
     clearInterval(intervalId);
+    sound.pause();
+    soundWin.play();
     
 
 }
@@ -306,7 +319,7 @@ function checkKeys(){
 }
 
 function generateEnemies(){
-    if(frames%100 === 0 ){
+    if(frames%20 === 0 ){
         const x = Math.floor(Math.random()*380);
         const enemy = new Enemies(x,0);
         enemyShip.push(enemy);
@@ -323,7 +336,7 @@ function drawEnemies(){
 }
 
 function generateEnemies2(){
-    if(frames%150 === 0){
+    if(frames%20 === 0){
         const x = Math.floor(Math.random()*380);
         const enemy2 = new Enemies2(x,0);
         enemyShip2.push(enemy2);
@@ -371,7 +384,7 @@ function checkBulletsEnemies(){
                 
                 if(!isGameOver) {
                     
-                    score++}
+                    score+=10}
                     
 
                 
@@ -390,7 +403,7 @@ function checkBulletsEnemies2(){
                 bullets.splice(randomBullet,1);
                 if(!isGameOver) {
                     
-                    score++;}
+                    score+=10;}
 
                 
             }
@@ -408,7 +421,7 @@ function checkBulletsEnemies3(){
                 bullets.splice(randomBullet,1);
                if(!isGameOver) {
                     
-                        score++;}
+                        score+=10;}
                 
                 
             }
@@ -502,8 +515,6 @@ function update(){
     
     
     
-    
-    
     // requestAnimationFrame(update);
 }
 function gameOverCheck(){
@@ -522,8 +533,6 @@ function gameWinCheck(){
 
 }
 
-
-
 //Funciones de interaccion con el usuario
 function clearCanvas(){
     ctx.clearRect(0, 0, $canvas.width, $canvas.height)
@@ -534,9 +543,6 @@ function clearCanvas(){
 $button.addEventListener("click",event=> {
     
     startGame();
-    
-        
-
     
 })
 
