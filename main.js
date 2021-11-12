@@ -17,7 +17,9 @@ let scoreMax=20;
 let score=0;
 let isGameOver=false;
 let isGameWin= false;
-let health=5;
+let health=100;
+const damage=1;
+let soundOn=0;
 
 
 //Definir las clases del juego
@@ -80,7 +82,8 @@ class Character{
         this.image = new Image();
         this.move = 40;
         this.image.src = "./images/spaceship-2-cut.png"
-        this.health = health;
+        this.health = 100;
+
         
     }
     
@@ -171,6 +174,7 @@ class Enemies extends Character{
 constructor(x,y) {
     super(x,y);
     this.image.src="./images/enemy-cut.png"
+    this.damage=10;
 }
 draw(){
     this.y+=2;
@@ -179,6 +183,7 @@ draw(){
     this.height=25;
     if(this.x > $canvas.width - this.width - 60)
     this.x = $canvas.width - this.width - 60;
+
    
 
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -192,6 +197,7 @@ class Enemies2 extends Character{
         this.image.src = "./images/spaceship-red-cut.png"
         this.height= 20;
         this.width= 30;
+        this.damage=10;
     }
 
     draw(){
@@ -211,6 +217,7 @@ class Enemies3 extends Character {
         this.image.src = "./images/spaceship-transparent-cut.png";
         this.height= 35;
         this.width= 50;
+        this.damage=10;
     }
 
     draw(){
@@ -235,7 +242,15 @@ function startGame(){
     if(intervalId) return;
     intervalId = setInterval(()=>{
         update();
+
     }, 1000/60);
+    if(soundOn===0){
+    const sound= new Audio();
+        sound.src="./images/music.mp3";
+        sound.play();
+        soundOn++;
+    }
+
 }
 function gameOver(){
     if(isGameOver){
@@ -410,50 +425,52 @@ function checkCollitions(){
     enemyShip.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                nave.health -= 1;
-                enemyShip.splice(randomEnemy,1);
+                enemyShip.splice(0,1);
+                nave.health-= randomEnemy.damage;
+            }else if(nave.health<=0){
+                nave.health===0;
+                clearInterval(intervalId);
+                isGameOver= true;
+                
+            }
             }else if (score===scoreMax){
                 gameWin();
                 clearInterval(intervalId);
 
-            }else if(nave.health===0){
-                clearInterval(intervalId);
-                isGameOver= true;
-                
-            }
         }
+        console.log(nave.health);
     })
     enemyShip2.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                nave.health -= 1;
-                enemyShip2.splice(randomEnemy,1);
+                enemyShip2.splice(0,1);
+                nave.health-=randomEnemy.damage;
 
+            }else if(nave.health<=0){ 
+                nave.health===0; 
+                clearInterval(intervalId);
+                isGameOver= true;
             }else if (score===5){
+                
                 gameWin();
                 clearInterval(intervalId);
             }
             
-            else if(nave.health===0){ 
-                
-                clearInterval(intervalId);
-                isGameOver= true;
-            }
         }
     })   
     enemyShip3.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health>0){
-                nave.health -= 1;
-                enemyShip3.splice(randomEnemy,1);
-            } else if (score===scoreMax){
-                gameWin();
-                clearInterval(intervalId);
-            }else if(nave.health===0){ 
-                
+                enemyShip3.splice(0,1);
+                nave.health -=randomEnemy.damage;
+            }else if(nave.health<=0){ 
+                nave.health===0;
                 clearInterval(intervalId);
                 isGameOver= true;
             }
+            } else if (score===scoreMax){
+                gameWin();
+                clearInterval(intervalId);
         }
     })
         
@@ -517,9 +534,10 @@ function clearCanvas(){
 $button.addEventListener("click",event=> {
     
     startGame();
-    const sound= new Audio();
-    sound.src="./images/music.mp3";
-    sound.play();
+    
+        
+
+    
 })
 
 

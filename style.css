@@ -40,7 +40,7 @@ canvas{
     border-radius: 50% 60%;
     border-width: 30px;
     background-color: red;
-    font-weight: 500;
+    font-weight: bold;
 }
 .buttonReset{
     width: 150px;
@@ -51,7 +51,7 @@ canvas{
     border-radius: 50% 60%;
     border-width: 30px;
     background-color: red;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 
