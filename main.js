@@ -2,7 +2,8 @@
 //Elementos del DOM (canvas)
 const $canvas = document.querySelector("canvas");
 const ctx= $canvas.getContext("2d");
-const $button= document.querySelector("button")
+const $button= document.querySelector(".buttonStart");
+const $buttonReset= document.querySelector(".buttonReset");
 
 //Variables globales
 let intervalId;
@@ -275,7 +276,7 @@ function checkKeys(){
                 nave.moveDown();
                 break;
             case " ":
-                const bullet = new Bullet(nave.x+40, nave.y);
+                const bullet = new Bullet(nave.x+20, nave.y);
                 bullet.shootSound();
                 bullets.push(bullet);
             // case "Enter":
@@ -519,4 +520,10 @@ $button.addEventListener("click",event=> {
     const sound= new Audio();
     sound.src="./images/music.mp3";
     sound.play();
+})
+
+
+$buttonReset.addEventListener("click",event=> {
+    window.location.reload();
+
 })

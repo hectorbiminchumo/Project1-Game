@@ -19,8 +19,8 @@ body{
 
 canvas{
     position:absolute;
-    left: 565px;
-    top: 178px;
+    left: 558px;
+    top: 170px;
     border-radius: 0px 0px 50px 0px;
     background-image: url("./images/startrek.webp");
     background-size: cover;
@@ -31,7 +31,7 @@ canvas{
 
 
 
-button{
+.buttonStart{
     width: 150px;
     height: 150px;
     position: relative;
@@ -41,8 +41,22 @@ button{
     border-width: 30px;
     background-color: red;
     font-weight: 500;
-    
 }
+.buttonReset{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    left: 777px;
+    top: -1080px;
+    border-radius: 50% 60%;
+    border-width: 30px;
+    background-color: red;
+    font-weight: 500;
+}
+
+
+
+
 .game{
     background-image: url(./images/space-back.jpeg);
     background-repeat: no-repeat;
