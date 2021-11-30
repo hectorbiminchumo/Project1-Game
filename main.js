@@ -372,7 +372,10 @@ function drawEnemies3(){
 
 
 function printBullets(){
-    bullets.forEach((bullet) => bullet.draw());
+    
+
+        bullets.forEach((bullet) => bullet.draw());
+
 }
 
 function checkBulletsEnemies(){
@@ -438,8 +441,8 @@ function checkCollitions(){
     enemyShip.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                enemyShip.splice(0,1);
                 nave.health-= randomEnemy.damage;
+                enemyShip.splice(0,1);
             }else if(nave.health<=0){
                 nave.health===0;
                 clearInterval(intervalId);
@@ -456,8 +459,8 @@ function checkCollitions(){
     enemyShip2.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health > 0){
-                enemyShip2.splice(0,1);
                 nave.health-=randomEnemy.damage;
+                enemyShip2.splice(0,1);
 
             }else if(nave.health<=0){ 
                 nave.health===0; 
@@ -474,8 +477,8 @@ function checkCollitions(){
     enemyShip3.forEach((randomEnemy)=>{
         if(nave.isTouching(randomEnemy)){
             if(nave.health>0){
-                enemyShip3.splice(0,1);
                 nave.health -=randomEnemy.damage;
+                enemyShip3.splice(0,1);
             }else if(nave.health<=0){ 
                 nave.health===0;
                 clearInterval(intervalId);
